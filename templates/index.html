@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+
+<!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+    <title>YouTube Download Link Extractor</title>
+</head>
+    <div class="container">
+      <div class="page-header">
+        <h3>YouTube Download Link Extractor</h3>
+      </div>
+      <div class="row">
+        <div class="col-md-12 form">
+          <div class="input input-group">
+            <div class="input-group-btn">
+              <button class="btn btn-primary" id="btn" type="button">Extract!</button>
+            </div>
+            <input type="text" id="txt" autocomplete="off" class="form-control" placeholder="Insert YouTube link here..">
+          </div>
+          <div class="box" id="box_result">
+            <div class="alert alert-warning" id="alert_result" role="alert"></div>
+          </div>
+        </div>
+      </div>
+        </div>
+</body>
+</html>
+
+<script type="text/javascript">
+    $(function(){
+        $("#btn").click(function(){
+            $("#alert_result").removeClass('alert-success alert-danger').addClass('alert-warning').html("Loading...");
+            $("#box_result").show();
+                $.getJSON('/doThisForPapa', {
+                    txt: $("#txt").val()
+                },
+            function(data){
+            if (data.video) {
+                var str = "";
+                $.each(data.video, function(i){
+                    str += data.video[i] + '<br>';
+                }),str += '<img src="' + data.thumb +'"><br>' ;
+                $.each(data.urls, function(key, value) {
+                    str += ' [<a href="' + value + '">' + key + '</a>]<br>' ;
+                }),
+                $("#alert_result").removeClass('alert-warning').addClass('alert-success').html(str);
+                } else {
+                $("#alert_result").removeClass('alert-warning').addClass('alert-danger').html("Invalid Link");
+                }
+         });
+      });
+    });
+</script>
